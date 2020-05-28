@@ -1,3 +1,5 @@
+// Zalgo Text Generator by Tchouky
+// http://www.eeemo.net/
 package main
 
 import (
