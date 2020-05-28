@@ -1,5 +1,5 @@
 ```sh
-$ cat greet.txt | go run main.go --size maxi --up --down
+$ cat testdata/greet.txt | go run main.go --size maxi --up --down
 ```
 
 ```sh
