@@ -14,16 +14,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var zalgo_up []string
-var zalgo_down []string
-var zalgo_mid []string
+var zalgoUp []string
+var zalgoDown []string
+var zalgoMid []string
 
+// data set of leet unicode chars
 func init() {
-	// data set of leet unicode chars
-	//---------------------------------------------------
-
-	//those go UP
-	zalgo_up = []string{
+	// those go UP
+	zalgoUp = []string{
 		"\u030d" /*     ̍     */, "\u030e" /*     ̎     */, "\u0304" /*     ̄     */, "\u0305", /*     ̅     */
 		"\u033f" /*     ̿     */, "\u0311" /*     ̑     */, "\u0306" /*     ̆     */, "\u0310", /*     ̐     */
 		"\u0352" /*     ͒     */, "\u0357" /*     ͗     */, "\u0351" /*     ͑     */, "\u0307", /*     ̇     */
@@ -39,8 +37,8 @@ func init() {
 		"\u0346" /*     ͆     */, "\u031a", /*     ̚     */
 	}
 
-	//those go DOWN
-	zalgo_down = []string{
+	// those go DOWN
+	zalgoDown = []string{
 		"\u0316" /*     ̖     */, "\u0317" /*     ̗     */, "\u0318" /*     ̘     */, "\u0319", /*     ̙     */
 		"\u031c" /*     ̜     */, "\u031d" /*     ̝     */, "\u031e" /*     ̞     */, "\u031f", /*     ̟     */
 		"\u0320" /*     ̠     */, "\u0324" /*     ̤     */, "\u0325" /*     ̥     */, "\u0326", /*     ̦     */
@@ -53,8 +51,8 @@ func init() {
 		"\u0356" /*     ͖     */, "\u0359" /*     ͙     */, "\u035a" /*     ͚     */, "\u0323", /*     ̣     */
 	}
 
-	//those always stay in the middle
-	zalgo_mid = []string{
+	// those always stay in the middle
+	zalgoMid = []string{
 		"\u0315" /*     ̕     */, "\u031b" /*     ̛     */, "\u0340" /*     ̀     */, "\u0341", /*     ́     */
 		"\u0358" /*     ͘     */, "\u0321" /*     ̡     */, "\u0322" /*     ̢     */, "\u0327", /*     ̧     */
 		"\u0328" /*     ̨     */, "\u0334" /*     ̴     */, "\u0335" /*     ̵     */, "\u0336", /*     ̶     */
@@ -64,30 +62,27 @@ func init() {
 	}
 }
 
-// rand funcs
-//---------------------------------------------------
-
-//gets a random char from a zalgo char table
-func rand_zalgo(array []string) string {
+// randZalgo gets a random char from a zalgo char table
+func randZalgo(array []string) string {
 	index := rand.Intn(len(array))
 	return array[index]
 }
 
-//lookup char to know if its a zalgo char or not
-func is_zalgo_char(c string) bool {
-	for _, cc := range zalgo_up {
+// isZalgoChar will lookup char to know if its a zalgo char or not
+func isZalgoChar(c string) bool {
+	for _, cc := range zalgoUp {
 		if c == cc {
 			return true
 		}
 	}
 
-	for _, cc := range zalgo_mid {
+	for _, cc := range zalgoMid {
 		if c == cc {
 			return true
 		}
 	}
 
-	for _, cc := range zalgo_down {
+	for _, cc := range zalgoDown {
 		if c == cc {
 			return true
 		}
@@ -126,13 +121,6 @@ func main() {
 			}
 
 			if fsize > 0 {
-				// scanner := bufio.NewScanner(os.Stdin)
-				// for scanner.Scan() {
-				// 	fmt.Println(scanner.Text()) // Println will add back the final '\n'
-				// }
-				// if err := scanner.Err(); err != nil {
-				// 	fmt.Fprintln(os.Stderr, "reading standard input:", err)
-				// }
 				b, err := ioutil.ReadAll(file)
 				if err != nil {
 					return err
@@ -146,7 +134,7 @@ func main() {
 			}
 
 			fmt.Print(
-				HECOMES(input, size, up, middle, down),
+				heComes(input, size, up, middle, down),
 			)
 
 			return nil
@@ -165,13 +153,11 @@ func main() {
 	}
 }
 
-// main shit
-//---------------------------------------------------
-func HECOMES(txt string, size string, up bool, middle bool, down bool) string {
+func heComes(txt string, size string, up bool, middle bool, down bool) string {
 	newtxt := ""
 
 	for _, c := range strings.Split(txt, "") {
-		if is_zalgo_char(c) {
+		if isZalgoChar(c) {
 			continue
 		}
 
@@ -195,73 +181,22 @@ func HECOMES(txt string, size string, up bool, middle bool, down bool) string {
 
 		if up {
 			for j := 0; j < numUp; j++ {
-				newtxt += rand_zalgo(zalgo_up)
+				newtxt += randZalgo(zalgoUp)
 			}
 		}
 
 		if middle {
 			for j := 0; j < numMid; j++ {
-				newtxt += rand_zalgo(zalgo_mid)
+				newtxt += randZalgo(zalgoMid)
 			}
 		}
 
 		if down {
 			for j := 0; j < numDown; j++ {
-				newtxt += rand_zalgo(zalgo_down)
+				newtxt += randZalgo(zalgoDown)
 			}
 		}
 	}
-
-	// for (var i = 0; i < txt.length; i++) {
-	//   if (is_zalgo_char(txt.substr(i, 1))) continue;
-
-	//   var num_up;
-	//   var num_mid;
-	//   var num_down;
-
-	//add the normal character
-	//   newtxt += txt.substr(i, 1);
-
-	//   //options
-	//   if (document.getElementById("zalgo_opt_mini").checked) {
-	// 	num_up = rand(8);
-	// 	num_mid = rand(2);
-	// 	num_down = rand(8);
-	//   } else if (document.getElementById("zalgo_opt_normal").checked) {
-	// 	num_up = rand(16) / 2 + 1;
-	// 	num_mid = rand(6) / 2;
-	// 	num_down = rand(16) / 2 + 1;
-	//   } //maxi
-	//   else {
-	// 	num_up = rand(64) / 4 + 3;
-	// 	num_mid = rand(16) / 4 + 1;
-	// 	num_down = rand(64) / 4 + 3;
-	//   }
-
-	//   if (document.getElementById("zalgo_opt_up").checked)
-	// 	for (var j = 0; j < num_up; j++) newtxt += rand_zalgo(zalgo_up);
-	//   if (document.getElementById("zalgo_opt_mid").checked)
-	// 	for (var j = 0; j < num_mid; j++) newtxt += rand_zalgo(zalgo_mid);
-	//   if (document.getElementById("zalgo_opt_down").checked)
-	// 	for (var j = 0; j < num_down; j++) newtxt += rand_zalgo(zalgo_down);
-	// }
-
-	//result is in nextxt, display that
-
-	//remove all children of lulz_container
-	// var container = document.getElementById("lulz_container");
-	// while (container.childNodes.length)
-	//   container.removeChild(container.childNodes[0]);
-
-	// //build blocks for each line & create a <br />
-	// var lines = newtxt.split("\n");
-	// for (var i = 0; i < lines.length; i++) {
-	//   var n = document.createElement("text");
-	//   n.innerHTML = lines[i];
-	//   container.appendChild(n);
-	//   var nl = document.createElement("br");
-	//   container.appendChild(nl);
-	// }
 
 	return newtxt
 }
