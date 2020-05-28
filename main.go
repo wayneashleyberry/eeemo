@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"os"
 	"strings"
@@ -102,13 +103,45 @@ func main() {
 
 	cmd := &cobra.Command{
 		Use:  "eeemo [text]",
-		Args: cobra.ExactArgs(1),
+		Args: cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if size != "mini" && size != "normal" && size != "maxi" {
 				return errors.New("invalid size")
 			}
 
-			input := args[0]
+			var input string
+
+			file := os.Stdin
+			fi, err := file.Stat()
+			if err != nil {
+				return err
+			}
+			fsize := fi.Size()
+			if fsize == 0 {
+				if len(args) > 0 {
+					input = args[0]
+				}
+			}
+
+			if fsize > 0 {
+				// scanner := bufio.NewScanner(os.Stdin)
+				// for scanner.Scan() {
+				// 	fmt.Println(scanner.Text()) // Println will add back the final '\n'
+				// }
+				// if err := scanner.Err(); err != nil {
+				// 	fmt.Fprintln(os.Stderr, "reading standard input:", err)
+				// }
+				b, err := ioutil.ReadAll(file)
+				if err != nil {
+					return err
+				}
+
+				input = string(b)
+			}
+
+			if input == "" {
+				return errors.New("couldn't read input")
+			}
 
 			fmt.Print(
 				HECOMES(input, size, up, middle, down),
