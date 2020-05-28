@@ -101,15 +101,17 @@ func main() {
 	middle, down = true, true
 
 	cmd := &cobra.Command{
-		Use:  "eeemo",
+		Use:  "eeemo [text]",
 		Args: cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if size != "mini" && size != "normal" && size != "maxi" {
 				return errors.New("invalid size")
 			}
 
+			input := args[0]
+
 			fmt.Print(
-				HECOMES(args[0], size, up, middle, down),
+				HECOMES(input, size, up, middle, down),
 			)
 
 			return nil
