@@ -23,9 +23,10 @@ func main() {
 				return errors.New("invalid size")
 			}
 
-			fmt.Println(up, middle, down)
+			text := HECOMES("...", size, up, middle, down)
 
-			fmt.Println(size)
+			fmt.Print(text)
+
 			return nil
 		},
 	}
@@ -40,4 +41,8 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func HECOMES(s string, size string, up bool, middle bool, down bool) string {
+	return s
 }
